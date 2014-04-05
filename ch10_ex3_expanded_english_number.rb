@@ -25,6 +25,55 @@ def english_number number
   # writing out right now.
   # write and left...get it? :)
   left = number
+
+  write = left/1000000000000 # How many trillions left?
+  left = left - write*1000000000000 # Subtract off those trillionss.
+  
+  if write > 0
+    # Now here's the recursion:
+    trillions = english_number write
+    num_string = num_string + trillions + ' trillion'
+    if left > 0
+      num_string = num_string + ' '
+    end
+  end
+
+  write = left/1000000000 # How many billions left?
+  left = left - write*1000000000 # Subtract off those billionss.
+  
+  if write > 0
+    # Now here's the recursion:
+    billions = english_number write
+    num_string = num_string + billions + ' billion'
+    if left > 0
+      num_string = num_string + ' '
+    end
+  end
+
+  write = left/1000000 # How many millions left?
+  left = left - write*1000000 # Subtract off those millionss.
+  
+  if write > 0
+    # Now here's the recursion:
+    millions = english_number write
+    num_string = num_string + millions + ' million'
+    if left > 0
+      num_string = num_string + ' '
+    end
+  end
+
+  write = left/1000 # How many thousands left?
+  left = left - write*1000 # Subtract off those thousands.
+  
+  if write > 0
+    # Now here's the recursion:
+    thousands = english_number write
+    num_string = num_string + thousands + ' thousand'
+    if left > 0
+      num_string = num_string + ' '
+    end
+  end
+
   write = left/100 # How many hundreds left?
   left = left - write*100 # Subtract off those hundreds.
   
@@ -90,4 +139,5 @@ puts english_number(101)
 puts english_number(234)
 puts english_number(3211)
 puts english_number(999999)
+puts english_number(2056851996)
 puts english_number(1000000000000)

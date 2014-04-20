@@ -1,6 +1,6 @@
 class Card
-	CARD_VALUE = {"2"=>2, "3"=>3, "4"=>4, "5"=>5, "6"=>6, "7"=>7, "8"=>8,
-              "9"=>9, "10"=>10, "Jack"=>10, "Queen"=>10, "King"=>10, "Ace"=>11}
+  CARD_VALUE = {"2"=>2, "3"=>3, "4"=>4, "5"=>5, "6"=>6, "7"=>7, "8"=>8,
+                "9"=>9, "10"=>10, "Jack"=>10, "Queen"=>10, "King"=>10, "Ace"=>11}
 
   attr_accessor :face, :suit, :value
   
@@ -30,18 +30,16 @@ class Deck
   attr_accessor :deck, :discard_deck
 
   def initialize(num_packs)
-  	
-   	@deck = []
+    @deck = []
     @discard_deck = []
     create(num_packs)
-    
   end
 
   def create(num_packs)
-  	pack = []
-  	cards = CARDS.product(SUITS)
+    pack = []
+    cards = CARDS.product(SUITS)
     cards.each do |c|
-    	pack << Card.new(c[0], c[1])
+      pack << Card.new(c[0], c[1])
     end
     
     @deck = pack * num_packs
@@ -56,13 +54,13 @@ class Deck
 
   def reshuffle
     @deck += @discard_deck
-  	@discard_deck.clear
-  	scramble
-  	@deck
+    @discard_deck.clear
+    scramble
+    @deck
   end
   
   def scramble
-  	3.times do
+    3.times do
       @deck.shuffle!
       # Now, cut the deck
       low_range = @deck.count * 0.33
@@ -98,13 +96,12 @@ class BlackJackHand
     @value = 0
     @aces = 0
     @name = name
-
   end
 
   def take_card(deck)
-  	card =  deck.deal
-  	@value += card.value
-  	@aces += 1 if card.face == "Ace"
+    card =  deck.deal
+    @value += card.value
+    @aces += 1 if card.face == "Ace"
     @hand << card
   end
 
@@ -119,31 +116,31 @@ class BlackJackHand
   end
 
   def show
-  	#puts "\n#{@name} has a hand value of #{@value}"
+    #puts "\n#{@name} has a hand value of #{@value}"
     @hand.each do |card|
       puts card.show
-    end
+    end  
   end
+
 end
 
 
 class Player
 
-	attr_accessor :name, :hand, :is_dealer
+  attr_accessor :name, :hand, :is_dealer
 
-	def initialize(name, gametype, isdealer=false)
-		@name = name
+  def initialize(name, gametype, isdealer=false)
+    @name = name
     @is_dealer = isdealer
     @gametype = gametype
     @hand = create_hand_type
- 	end
+  end
   
   private
 
- 	def create_hand_type
-  
+  def create_hand_type
     if @gametype == "BlackJack"
-    	blackjack_hand = BlackJackHand.new(@name)
+      blackjack_hand = BlackJackHand.new(@name)
     else
       # Only 1 game type for now
       blackjack_hand = BlackJackHand.new(@name)
@@ -160,19 +157,19 @@ class Blackjack
   def establish_deck(number_of_packs)
     @blackjack_deck = Deck.new(number_of_packs)
     puts "Cards in deck - #{blackjack_deck.count}"
-
   end
 
   def initial_deal
-  	blackjack_deck.reshuffle if blackjack_deck.count < 25
-  	puts "@@@@@  --  Cards remaining in deck - #{blackjack_deck.count}  --  @@@@@"
+    blackjack_deck.reshuffle if blackjack_deck.count < 25
+    puts "@@@@@  --  Cards remaining in deck - #{blackjack_deck.count}  --  @@@@@"
     @player.hand.reset
     @dealer.hand.reset
 
     2.times do
-    	@player.hand.take_card(blackjack_deck)
+      @player.hand.take_card(blackjack_deck)
       @dealer.hand.take_card(blackjack_deck)
     end
+
   end
 
   def setup_players
@@ -191,7 +188,7 @@ class Blackjack
   end
 
   def player_turn(p)
-  	loop do
+    loop do
       break if p.hand.value > 21  
       
       puts "Do you wish to Hit(H) or Stay(S)?  Default is Stay"
@@ -200,13 +197,14 @@ class Blackjack
     
       p.hand.take_card(blackjack_deck)
       if p.hand.value > 21 && p.hand.aces > 0
-      	p.hand.value -= 10
-      	p.hand.aces -= 1
+        p.hand.value -= 10
+        p.hand.aces -= 1
       end
+
       puts "\n#{p.name} now has a hand value of #{p.hand.value}"
       p.hand.show
-            	
     end
+
   end
 
   def dealer_turn
@@ -216,17 +214,18 @@ class Blackjack
       puts "\n#{@dealer.name} takes another card"
       @dealer.hand.take_card(blackjack_deck)
       if @dealer.hand.value > 21 && @dealer.hand.aces > 0
-      	@dealer.hand.value -= 10
-      	@dealer.hand.aces -= 1
+        @dealer.hand.value -= 10
+        @dealer.hand.aces -= 1
       end
+      
       puts "\n#{@dealer.name} now has a hand value of #{@dealer.hand.value}"
       @dealer.hand.show
-      	
     end
+
   end
 
   def determine_winner
-  	case  # dealer.hand.value
+    case  # dealer.hand.value
       when @dealer.hand.value > @player.hand.value  
         "  $$$  House Wins!  $$$"
 
@@ -240,6 +239,7 @@ class Blackjack
           "The game is a DRAW!"
         end
     end
+    
   end
 
   def run
@@ -265,12 +265,12 @@ class Blackjack
 
       @dealer_blackjack = true ? @dealer.hand.value == 21 : false
       if @dealer_blackjack && @player.hand.value == 21
-      	puts "#{@dealer.name} and #{@player.name} both have BlackJack!  The game is a DRAW!"
+        puts "#{@dealer.name} and #{@player.name} both have BlackJack!  The game is a DRAW!"
       
       elsif  @player.hand.value == 21
-      	puts "\n#{@player.name} has BlackJack!  #{@player.name} WINS!"
-      	puts "The dealer's hand was -->"
-      	@dealer.hand.show
+        puts "\n#{@player.name} has BlackJack!  #{@player.name} WINS!"
+        puts "The dealer's hand was -->"
+        @dealer.hand.show
 
       else
         puts "\n#{@player.name} goes first"
@@ -294,7 +294,7 @@ class Blackjack
             if @dealer.hand.bust
         	    puts "\n#{@dealer.name} has Busted!  #{@player.name} WINS!"
         	  else
-        	  	puts "#{@dealer.name} stays with current hand"
+              puts "#{@dealer.name} stays with current hand"
               puts determine_winner
             end
           end
